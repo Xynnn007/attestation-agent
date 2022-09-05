@@ -65,13 +65,14 @@ pub fn load_resources(resources_file_name: &str) -> Result<Resources> {
 }
 
 pub mod tests {
-    pub use super::*;
-    use crate::kbc_modules::ResourceName;
+    use super::*;
     pub use base64;
+    pub use strum_macros::Display;
+    pub use strum_macros::EnumString;
+    pub use strum::*;
     pub use std::env;
     pub use std::fs;
     pub use std::path::{Path, PathBuf};
-
     #[allow(dead_code)]
     pub const KID: &str = "foo";
     #[allow(dead_code)]
@@ -81,6 +82,16 @@ pub mod tests {
     pub const PUBKEY: &str = "pubkey";
     #[allow(dead_code)]
     pub const RESOURCES_NAME: &str = "aa-offline_fs_kbc-resources.json";
+
+    #[derive(EnumString, Display, Debug, PartialEq)]
+    pub enum ResourceName {
+        #[strum(serialize = "Policy")]
+        Policy,
+        #[strum(serialize = "Sigstore Config")]
+        SigstoreConfig,
+        #[strum(serialize = "GPG Keyring")]
+        GPGPublicKey,
+    }
 
     #[allow(dead_code)]
     pub fn create_keyfile(name: &str) -> PathBuf {

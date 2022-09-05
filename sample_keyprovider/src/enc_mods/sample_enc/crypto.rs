@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
-use aes_gcm::aead::{Aead, KeyInit};
-use aes_gcm::{Aes256Gcm, Key, Nonce};
+use aes_gcm::{Aes256Gcm, Key, Nonce, KeyInit, aead::Aead};
 use anyhow::*;
 
 pub const HARDCODED_KEY: &'static [u8] = &[
