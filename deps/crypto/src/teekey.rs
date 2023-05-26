@@ -7,11 +7,10 @@
 
 use anyhow::*;
 use kbs_types::TeePubKey;
-use rsa::{PaddingScheme, PublicKeyParts, RsaPrivateKey, RsaPublicKey};
+use rsa::{traits::PublicKeyParts, Pkcs1v15Encrypt, RsaPrivateKey, RsaPublicKey};
 use sha2::{Digest, Sha384};
 
 const RSA_PUBKEY_LENGTH: usize = 2048;
-const NEW_PADDING: fn() -> PaddingScheme = PaddingScheme::new_pkcs1v15_encrypt;
 
 pub const RSA_ALGORITHM: &str = "RSA1_5";
 pub const AES_256_GCM_ALGORITHM: &str = "A256GCM";
@@ -50,10 +49,8 @@ impl TeeKey {
 
     // Use TEE private key to decrypt cipher text.
     pub fn decrypt(&self, cipher_text: Vec<u8>) -> Result<Vec<u8>> {
-        let padding = NEW_PADDING();
-
         self.private_key
-            .decrypt(padding, &cipher_text)
+            .decrypt(Pkcs1v15Encrypt, &cipher_text)
             .map_err(|e| anyhow!("TEE RSA key decrypt failed: {:?}", e))
     }
 }
