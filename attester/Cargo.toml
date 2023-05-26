@@ -22,4 +22,3 @@ all-attesters = ["tdx-attester", "occlum-attester"]
 
 tdx-attester = ["tdx-attest-rs"]
 occlum-attester = ["occlum_dcap"]
-az-snp-vtpm-attester = ["az-snp-vtpm"]
