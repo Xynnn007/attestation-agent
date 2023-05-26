@@ -10,8 +10,6 @@ use anyhow::*;
 
 pub mod sample;
 
-#[cfg(feature = "az-snp-vtpm-attester")]
-pub mod az_snp_vtpm;
 #[cfg(feature = "tdx-attester")]
 pub mod tdx;
 

@@ -4,6 +4,7 @@
 //
 
 use anyhow::*;
+use base64::Engine;
 use crypto::{self, TeeKey, WrapType, AES_256_GCM_ALGORITHM, RSA_ALGORITHM};
 use serde::{Deserialize, Serialize};
 use zeroize::Zeroizing;
@@ -73,11 +74,12 @@ pub fn decrypt_response(response: &Response, tee_key: TeeKey) -> Result<Vec<u8>>
 
     // unwrap the wrapped key
     let wrapped_symkey: Vec<u8> =
-        base64::decode_config(&response.encrypted_key, base64::URL_SAFE_NO_PAD)?;
+        base64::engine::general_purpose::URL_SAFE_NO_PAD.decode(&response.encrypted_key)?;
     let symkey: Vec<u8> = tee_key.decrypt(wrapped_symkey)?;
 
-    let iv = base64::decode_config(&response.iv, base64::URL_SAFE_NO_PAD)?;
-    let ciphertext = base64::decode_config(&response.ciphertext, base64::URL_SAFE_NO_PAD)?;
+    let iv = base64::engine::general_purpose::URL_SAFE_NO_PAD.decode(&response.iv)?;
+    let ciphertext =
+        base64::engine::general_purpose::URL_SAFE_NO_PAD.decode(&response.ciphertext)?;
 
     let plaintext = match protected.enc.as_str() {
         AES_256_GCM_ALGORITHM => crypto::decrypt(
